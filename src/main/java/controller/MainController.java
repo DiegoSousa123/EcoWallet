@@ -1,5 +1,7 @@
 package controller;
 
+import java.time.format.DateTimeFormatter;
+
 import factory.TransacaoFactory;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
@@ -17,6 +19,8 @@ import service.GerenciadorFinancas;
 import service.PersistenciaService;
 
 public class MainController {
+
+    private static final DateTimeFormatter FORMATO_DATA = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     private final GerenciadorFinancas gerenciador = new GerenciadorFinancas();
     private final PersistenciaService persistencia = new PersistenciaService();
@@ -49,7 +53,7 @@ public class MainController {
     public void initialize() {
         colunaDescricao.setCellValueFactory(cell -> new ReadOnlyStringWrapper(cell.getValue().getDescricao()));
         colunaValor.setCellValueFactory(cell -> new ReadOnlyObjectWrapper<>(cell.getValue().getValor()));
-        colunaData.setCellValueFactory(cell -> new ReadOnlyStringWrapper(cell.getValue().getData().toString()));
+        colunaData.setCellValueFactory(cell -> new ReadOnlyStringWrapper(cell.getValue().getData().format(FORMATO_DATA)));
 
         comboCategoria.setItems(FXCollections.observableArrayList(Categoria.values()));
 

@@ -63,7 +63,7 @@ public class TransacaoJsonDAO implements TransacaoDAO {
                 Categoria categoria = Categoria.valueOf((String) jsonObj.get("categoria"));
 
                 // DELEGAÇÃO: O DAO aciona a Factory para criar o objeto correto
-                Transacao transacao = TransacaoFactory.criarTransacao(tipo, descricao, valor, data, categoria);
+                Transacao transacao = TransacaoFactory.criar(tipo, valor, descricao, data, categoria);
 
                 if (transacao != null) {
                     transacoes.add(transacao);

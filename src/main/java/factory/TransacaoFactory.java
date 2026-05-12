@@ -22,8 +22,4 @@ public class TransacaoFactory {
             throw new IllegalArgumentException("Tipo inválido: " + tipo);
         }
     }
-
-    public static Transacao criarTransacao(String tipo, String descricao, double valor, LocalDate data, Categoria categoria) {
-        return criar(tipo, valor, descricao, data, categoria);
-    }
 }
