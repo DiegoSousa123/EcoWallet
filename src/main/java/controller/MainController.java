@@ -1,6 +1,9 @@
 package controller;
 
+import java.text.NumberFormat;
+import java.text.ParsePosition;
 import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 
 import factory.TransacaoFactory;
 import javafx.beans.property.ReadOnlyObjectWrapper;
@@ -21,6 +24,7 @@ import service.PersistenciaService;
 public class MainController {
 
     private static final DateTimeFormatter FORMATO_DATA = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    private static final NumberFormat FORMATO_NUMERO_PT_BR = NumberFormat.getNumberInstance(new Locale("pt", "BR"));
 
     private final GerenciadorFinancas gerenciador = new GerenciadorFinancas();
     private final PersistenciaService persistencia = new PersistenciaService();
@@ -99,14 +103,14 @@ public class MainController {
             return;
         }
 
-        double valor;
-        try {
-            valor = Double.parseDouble(valorTexto.replace(',', '.'));
-        } catch (NumberFormatException e) {
+        ParsePosition parsePosition = new ParsePosition(0);
+        Number numero = FORMATO_NUMERO_PT_BR.parse(valorTexto, parsePosition);
+        if (numero == null || parsePosition.getIndex() != valorTexto.length()) {
             mostrarAviso("Informe um valor numérico válido.");
             return;
         }
 
+        double valor = numero.doubleValue();
         if (valor <= 0) {
             mostrarAviso("O valor deve ser maior que zero.");
             return;

@@ -2,6 +2,7 @@ package service;
 
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +30,7 @@ public class PersistenciaService {
         }
         try (FileWriter writer = new FileWriter(ARQUIVO)) {
             writer.write(array.toJSONString());
-        } catch (Exception e) {
+        } catch (IOException e) {
             System.out.println("Erro ao salvar: " + e.getMessage());
         }
     }
