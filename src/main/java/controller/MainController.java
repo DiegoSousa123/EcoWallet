@@ -1,7 +1,10 @@
 package controller;
 
 import java.time.LocalDate;
+import java.util.IdentityHashMap;
+import java.util.Map;
 
+import factory.TransacaoFactory;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
@@ -21,6 +24,7 @@ public class MainController {
 
     private final GerenciadorFinancas gerenciador = new GerenciadorFinancas();
     private final PersistenciaService persistencia = new PersistenciaService();
+    private final Map<Transacao, LocalDate> datasTransacoes = new IdentityHashMap<>();
 
     @FXML
     private TableView<Transacao> tabelaTransacoes;
@@ -50,11 +54,15 @@ public class MainController {
     public void initialize() {
         colunaDescricao.setCellValueFactory(cell -> new ReadOnlyStringWrapper(cell.getValue().getDescricao()));
         colunaValor.setCellValueFactory(cell -> new ReadOnlyObjectWrapper<>(cell.getValue().getValor()));
-        colunaData.setCellValueFactory(cell -> new ReadOnlyStringWrapper(LocalDate.now().toString()));
+        colunaData.setCellValueFactory(cell -> new ReadOnlyStringWrapper(
+            datasTransacoes.getOrDefault(cell.getValue(), LocalDate.now()).toString()
+        ));
 
         comboCategoria.setItems(FXCollections.observableArrayList(Categoria.values()));
 
         gerenciador.getTransacoes().addAll(persistencia.carregar());
+        gerenciador.getTransacoes().forEach(t -> datasTransacoes.putIfAbsent(t, LocalDate.now()));
+
         atualizarTabela();
         atualizarSaldo();
     }
@@ -79,7 +87,9 @@ public class MainController {
         }
 
         gerenciador.removerTransacao(selecionada);
+        datasTransacoes.remove(selecionada);
         persistencia.salvar(gerenciador.getTransacoes());
+
         atualizarTabela();
         atualizarSaldo();
     }
@@ -107,8 +117,9 @@ public class MainController {
             return;
         }
 
-        Transacao transacao = factory.TransacaoFactory.criar(tipo, valor, descricao, categoria);
+        Transacao transacao = TransacaoFactory.criar(tipo, valor, descricao, categoria);
         gerenciador.adicionarTransacao(transacao);
+        datasTransacoes.put(transacao, LocalDate.now());
 
         persistencia.salvar(gerenciador.getTransacoes());
         atualizarTabela();
