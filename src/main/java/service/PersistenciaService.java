@@ -1,13 +1,17 @@
 package service;
+
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
+import factory.TransacaoFactory;
 import model.Categoria;
 import model.Transacao;
-import factory.TransacaoFactory;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
 
 public class PersistenciaService {
     private static final String ARQUIVO = "transacoes.json";
@@ -20,11 +24,12 @@ public class PersistenciaService {
             obj.put("valor", t.getValor());
             obj.put("descricao", t.getDescricao());
             obj.put("categoria", t.getCategoria().name());
+            obj.put("data", t.getData().toString());
             array.add(obj);
         }
         try (FileWriter writer = new FileWriter(ARQUIVO)) {
             writer.write(array.toJSONString());
-        } catch (IOException e) {
+        } catch (Exception e) {
             System.out.println("Erro ao salvar: " + e.getMessage());
         }
     }
@@ -37,10 +42,12 @@ public class PersistenciaService {
             for (Object obj : array) {
                 JSONObject json = (JSONObject) obj;
                 String tipo = (String) json.get("tipo");
-                double valor = (double) json.get("valor");
+                double valor = ((Number) json.get("valor")).doubleValue();
                 String descricao = (String) json.get("descricao");
                 Categoria categoria = Categoria.valueOf((String) json.get("categoria"));
-                lista.add(TransacaoFactory.criar(tipo, valor, descricao, categoria));
+                String dataTexto = (String) json.get("data");
+                LocalDate data = dataTexto == null ? LocalDate.now() : LocalDate.parse(dataTexto);
+                lista.add(TransacaoFactory.criar(tipo, valor, descricao, data, categoria));
             }
         } catch (Exception e) {
             return new ArrayList<>();

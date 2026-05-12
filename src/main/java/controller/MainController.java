@@ -1,9 +1,5 @@
 package controller;
 
-import java.time.LocalDate;
-import java.util.IdentityHashMap;
-import java.util.Map;
-
 import factory.TransacaoFactory;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
@@ -24,7 +20,6 @@ public class MainController {
 
     private final GerenciadorFinancas gerenciador = new GerenciadorFinancas();
     private final PersistenciaService persistencia = new PersistenciaService();
-    private final Map<Transacao, LocalDate> datasTransacoes = new IdentityHashMap<>();
 
     @FXML
     private TableView<Transacao> tabelaTransacoes;
@@ -54,14 +49,11 @@ public class MainController {
     public void initialize() {
         colunaDescricao.setCellValueFactory(cell -> new ReadOnlyStringWrapper(cell.getValue().getDescricao()));
         colunaValor.setCellValueFactory(cell -> new ReadOnlyObjectWrapper<>(cell.getValue().getValor()));
-        colunaData.setCellValueFactory(cell -> new ReadOnlyStringWrapper(
-            datasTransacoes.getOrDefault(cell.getValue(), LocalDate.now()).toString()
-        ));
+        colunaData.setCellValueFactory(cell -> new ReadOnlyStringWrapper(cell.getValue().getData().toString()));
 
         comboCategoria.setItems(FXCollections.observableArrayList(Categoria.values()));
 
         gerenciador.getTransacoes().addAll(persistencia.carregar());
-        gerenciador.getTransacoes().forEach(t -> datasTransacoes.putIfAbsent(t, LocalDate.now()));
 
         atualizarTabela();
         atualizarSaldo();
@@ -87,7 +79,6 @@ public class MainController {
         }
 
         gerenciador.removerTransacao(selecionada);
-        datasTransacoes.remove(selecionada);
         persistencia.salvar(gerenciador.getTransacoes());
 
         atualizarTabela();
@@ -95,8 +86,8 @@ public class MainController {
     }
 
     private void adicionarTransacao(String tipo) {
-        String descricao = campoDescricao.getText() == null ? "" : campoDescricao.getText().trim();
-        String valorTexto = campoValor.getText() == null ? "" : campoValor.getText().trim();
+        String descricao = campoDescricao.getText().trim();
+        String valorTexto = campoValor.getText().trim();
         Categoria categoria = comboCategoria.getValue();
 
         if (descricao.isEmpty() || valorTexto.isEmpty() || categoria == null) {
@@ -119,7 +110,6 @@ public class MainController {
 
         Transacao transacao = TransacaoFactory.criar(tipo, valor, descricao, categoria);
         gerenciador.adicionarTransacao(transacao);
-        datasTransacoes.put(transacao, LocalDate.now());
 
         persistencia.salvar(gerenciador.getTransacoes());
         atualizarTabela();
