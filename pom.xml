@@ -6,7 +6,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <!-- Identificação do Projeto -->
-    <groupId>edu.com.br</groupId>
+    <groupId>br.unicatolica.projeto_ecowallet</groupId>
     <artifactId>EcoWallet</artifactId>
     <version>1.0-SNAPSHOT</version>
     <name>EcoWallet</name>
@@ -20,7 +20,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <!-- Versão do JavaFX -->
-        <javafx.version>21.0.2</javafx.version>
+        <javafx.version>21</javafx.version>
 
         <!-- Classe principal da aplicação -->
         <main.class>app.Main</main.class>
