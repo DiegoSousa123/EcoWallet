@@ -1,5 +1,8 @@
 package model;
 
-public class Categoria {
-
+public enum Categoria {
+    ALIMENTACAO,
+    TRANSPORTE,
+    LAZER,
+    SAUDE
 }
