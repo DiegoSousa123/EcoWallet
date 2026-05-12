@@ -1,18 +1,15 @@
 package service;
-
 import model.Categoria;
 import model.Transacao;
 import factory.TransacaoFactory;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class PersistenciaService {
-
     private static final String ARQUIVO = "transacoes.json";
 
     public void salvar(List<Transacao> transacoes) {
