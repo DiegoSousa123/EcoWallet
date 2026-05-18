@@ -20,6 +20,7 @@ import org.junit.jupiter.api.Test;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,7 +47,7 @@ class DAOTest {
     @Test
     void deveSalvarTransacoesNoArquivoComSucesso() throws Exception {
         List<Transacao> transacoes = new ArrayList<>();
-        Transacao t1 = TransacaoFactory.criar(TipoTransacao.DESPESA, 240, "Teste 1", Categoria.LAZER);
+        Transacao t1 = TransacaoFactory.criar(TipoTransacao.DESPESA, 240, "Teste 1", Categoria.LAZER, LocalDate.now());
         transacoes.add(t1);
         dao.salvar(transacoes);       
         File arquivoGerado = new File(CAMINHO_ARQUIVO);
