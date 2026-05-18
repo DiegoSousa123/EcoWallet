@@ -1,10 +1,221 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.shape.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx/21"
+<BorderPane xmlns="http://javafx.com/javafx/21"
             xmlns:fx="http://javafx.com/fxml/1"
-            prefHeight="600"
-            prefWidth="900">
+            fx:controller="controller.MainController"
+            styleClass="root-pane"
+            stylesheets="@style.css">
 
-</AnchorPane>
+  
+    <left>
+        <VBox styleClass="sidebar" prefWidth="220">
+
+            <!-- Logo / Título -->
+            <VBox styleClass="sidebar-header" alignment="CENTER">
+                <Label text="🌿" styleClass="logo-icon"/>
+                <Label text="EcoWallet" styleClass="app-title"/>
+                <Label text="Controle Financeiro" styleClass="app-subtitle"/>
+            </VBox>
+
+            <!-- Separador -->
+            <Separator styleClass="sidebar-separator"/>
+
+            <!-- Navegação -->
+            <VBox styleClass="nav-section" VBox.vgrow="ALWAYS">
+                <Label text="NAVEGAÇÃO" styleClass="nav-section-label"/>
+                <Button text="📊  Dashboard"   styleClass="nav-btn, nav-btn-active" maxWidth="Infinity" fx:id="btnDashboard"/>
+                <Button text="➕  Nova Transação" styleClass="nav-btn"              maxWidth="Infinity" fx:id="btnNovaTransacao"/>
+                <Button text="📋  Histórico"    styleClass="nav-btn"               maxWidth="Infinity" fx:id="btnHistorico"/>
+                <Button text="📁  Categorias"   styleClass="nav-btn"               maxWidth="Infinity" fx:id="btnCategorias"/>
+            </VBox>
+
+            <!-- Rodapé da sidebar -->
+            <VBox styleClass="sidebar-footer">
+                <Separator styleClass="sidebar-separator"/>
+                <Label text="v1.0.0  •  POO 2026" styleClass="version-label"/>
+            </VBox>
+
+            <VBox.margin>
+                <Insets/>
+            </VBox.margin>
+        </VBox>
+    </left>
+
+    <center>
+        <VBox styleClass="main-content" spacing="20">
+            <padding>
+                <Insets top="28" right="32" bottom="28" left="32"/>
+            </padding>
+
+            <!-- ── Cabeçalho ── -->
+            <HBox styleClass="page-header" alignment="CENTER_LEFT" spacing="16">
+                <VBox spacing="2" HBox.hgrow="ALWAYS">
+                    <Label text="Dashboard" styleClass="page-title" fx:id="lblPageTitle"/>
+                    <Label text="Bem-vindo de volta! Aqui está seu resumo financeiro." styleClass="page-desc"/>
+                </VBox>
+                <Button text="+ Adicionar" styleClass="btn-primary" fx:id="btnAddTransacao"
+                        onAction="#handleAddTransacao"/>
+            </HBox>
+
+            <!-- ── Cards de Resumo ── -->
+            <HBox spacing="16">
+
+                <!-- Card Saldo -->
+                <VBox styleClass="summary-card, card-saldo" HBox.hgrow="ALWAYS" spacing="8">
+                    <HBox alignment="CENTER_LEFT" spacing="8">
+                        <Label text="💰" styleClass="card-icon"/>
+                        <Label text="SALDO TOTAL" styleClass="card-label"/>
+                    </HBox>
+                    <Label fx:id="lblSaldoTotal" text="R$ 0,00" styleClass="card-value, value-saldo"/>
+                    <Label fx:id="lblSaldoInfo"  text="Atualizado agora" styleClass="card-hint"/>
+                </VBox>
+
+                <!-- Card Receitas -->
+                <VBox styleClass="summary-card, card-receita" HBox.hgrow="ALWAYS" spacing="8">
+                    <HBox alignment="CENTER_LEFT" spacing="8">
+                        <Label text="📈" styleClass="card-icon"/>
+                        <Label text="RECEITAS" styleClass="card-label"/>
+                    </HBox>
+                    <Label fx:id="lblTotalReceitas" text="R$ 0,00" styleClass="card-value, value-receita"/>
+                    <Label fx:id="lblQtdReceitas"   text="0 transações" styleClass="card-hint"/>
+                </VBox>
+
+                <!-- Card Despesas -->
+                <VBox styleClass="summary-card, card-despesa" HBox.hgrow="ALWAYS" spacing="8">
+                    <HBox alignment="CENTER_LEFT" spacing="8">
+                        <Label text="📉" styleClass="card-icon"/>
+                        <Label text="DESPESAS" styleClass="card-label"/>
+                    </HBox>
+                    <Label fx:id="lblTotalDespesas" text="R$ 0,00" styleClass="card-value, value-despesa"/>
+                    <Label fx:id="lblQtdDespesas"   text="0 transações" styleClass="card-hint"/>
+                </VBox>
+
+            </HBox>
+
+            <!-- ── Formulário de Nova Transação ── -->
+            <VBox styleClass="form-card" spacing="14" fx:id="formPanel">
+                <Label text="Nova Transação" styleClass="section-title"/>
+
+                <HBox spacing="12" alignment="CENTER_LEFT">
+
+                    <!-- Tipo -->
+                    <VBox spacing="4" HBox.hgrow="ALWAYS">
+                        <Label text="Tipo" styleClass="field-label"/>
+                        <ComboBox fx:id="cbTipo" promptText="Selecione o tipo"
+                                  styleClass="field-combo" maxWidth="Infinity">
+                            <items>
+                                <FXCollections fx:factory="observableArrayList">
+                                    <String fx:value="Receita"/>
+                                    <String fx:value="Despesa"/>
+                                </FXCollections>
+                            </items>
+                        </ComboBox>
+                    </VBox>
+
+                    <!-- Categoria -->
+                    <VBox spacing="4" HBox.hgrow="ALWAYS">
+                        <Label text="Categoria" styleClass="field-label"/>
+                        <ComboBox fx:id="cbCategoria" promptText="Categoria"
+                                  styleClass="field-combo" maxWidth="Infinity"/>
+                    </VBox>
+
+                    <!-- Data -->
+                    <VBox spacing="4" HBox.hgrow="ALWAYS">
+                        <Label text="Data" styleClass="field-label"/>
+                        <DatePicker fx:id="dpData" styleClass="field-datepicker" maxWidth="Infinity"/>
+                    </VBox>
+
+                </HBox>
+
+                <HBox spacing="12" alignment="CENTER_LEFT">
+
+                    <!-- Descrição -->
+                    <VBox spacing="4" HBox.hgrow="ALWAYS">
+                        <Label text="Descrição" styleClass="field-label"/>
+                        <TextField fx:id="tfDescricao" promptText="Ex: Salário, Aluguel..."
+                                   styleClass="field-input"/>
+                    </VBox>
+
+                    <!-- Valor -->
+                    <VBox spacing="4" prefWidth="180">
+                        <Label text="Valor (R$)" styleClass="field-label"/>
+                        <TextField fx:id="tfValor" promptText="0,00"
+                                   styleClass="field-input, field-valor"/>
+                    </VBox>
+
+                </HBox>
+
+                <!-- Mensagem de erro -->
+                <Label fx:id="lblErro" text="" styleClass="error-label" visible="false" managed="false"/>
+
+                <HBox spacing="10" alignment="CENTER_RIGHT">
+                    <Button text="Limpar"    styleClass="btn-secondary" onAction="#handleLimpar"/>
+                    <Button text="Salvar ✓"  styleClass="btn-primary"   onAction="#handleSalvar"
+                            defaultButton="true"/>
+                </HBox>
+            </VBox>
+
+            <!-- ── Tabela de Transações ── -->
+            <VBox styleClass="table-card" VBox.vgrow="ALWAYS" spacing="12">
+
+                <HBox alignment="CENTER_LEFT" spacing="12">
+                    <Label text="Histórico de Transações" styleClass="section-title" HBox.hgrow="ALWAYS"/>
+
+                    <!-- Barra de busca -->
+                    <TextField fx:id="tfBusca" promptText="🔍  Buscar..."
+                               styleClass="field-input, search-field" prefWidth="200"
+                               onKeyReleased="#handleBusca"/>
+
+                    <!-- Filtro tipo -->
+                    <ComboBox fx:id="cbFiltroTipo" promptText="Todos" styleClass="field-combo"
+                              prefWidth="130" onAction="#handleFiltro">
+                        <items>
+                            <FXCollections fx:factory="observableArrayList">
+                                <String fx:value="Todos"/>
+                                <String fx:value="Receita"/>
+                                <String fx:value="Despesa"/>
+                            </FXCollections>
+                        </items>
+                    </ComboBox>
+
+                    <Button text="🗑 Remover" styleClass="btn-danger" onAction="#handleRemover"
+                            fx:id="btnRemover"/>
+                </HBox>
+
+                <TableView fx:id="tabelaTransacoes" VBox.vgrow="ALWAYS"
+                           styleClass="transacao-table" placeholder="@string/tabela_vazia">
+
+                    <columns>
+                        <TableColumn fx:id="colData"      text="Data"      prefWidth="110" sortable="true"/>
+                        <TableColumn fx:id="colTipo"      text="Tipo"      prefWidth="100" sortable="true"/>
+                        <TableColumn fx:id="colCategoria" text="Categoria" prefWidth="140" sortable="true"/>
+                        <TableColumn fx:id="colDescricao" text="Descrição" prefWidth="260" sortable="true"/>
+                        <TableColumn fx:id="colValor"     text="Valor"     prefWidth="130" sortable="true"/>
+                    </columns>
+
+                    <columnResizePolicy>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                    </columnResizePolicy>
+
+                </TableView>
+
+                <!-- Rodapé da tabela -->
+                <HBox alignment="CENTER_LEFT" spacing="16" styleClass="table-footer">
+                    <Label fx:id="lblQtdRegistros" text="0 registros" styleClass="footer-info"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Label text="Saldo:" styleClass="footer-info"/>
+                    <Label fx:id="lblSaldoFooter" text="R$ 0,00" styleClass="footer-saldo"/>
+                </HBox>
+
+            </VBox>
+
+        </VBox>
+    </center>
+
+</BorderPane>
