@@ -23,7 +23,7 @@
         <javafx.version>21</javafx.version>
 
         <!-- Classe principal da aplicação -->
-        <main.class>app.Main</main.class>
+        <main.class>app.App</main.class>
     </properties>
 
     <!-- Dependências -->
