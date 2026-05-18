@@ -77,5 +77,6 @@ Thumbs.db
 # =========================
 # Dados gerados pela aplicação
 # (Remova esta linha se quiser versionar o JSON inicial)
+*.json
 # =========================
 # data/transacoes.json
