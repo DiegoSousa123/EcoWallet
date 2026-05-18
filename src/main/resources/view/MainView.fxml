@@ -34,9 +34,9 @@
             <VBox styleClass="nav-section" VBox.vgrow="ALWAYS">
                 <Label styleClass="nav-section-label" text="NAVEGAÇÃO" />
                 <Button fx:id="btnDashboard" maxWidth="Infinity" styleClass="nav-btn, nav-btn-active" text="📊  Dashboard" />
-                <Button fx:id="btnNovaTransacao" maxWidth="Infinity" styleClass="nav-btn" text="➕  Nova Transação" />
-                <Button fx:id="btnHistorico" maxWidth="Infinity" styleClass="nav-btn" text="📋  Histórico" />
-                <Button fx:id="btnCategorias" maxWidth="Infinity" styleClass="nav-btn" text="📁  Categorias" />
+<!--                <Button fx:id="btnNovaTransacao" maxWidth="Infinity" styleClass="nav-btn" text="➕  Nova Transação" />-->
+<!--                <Button fx:id="btnHistorico" maxWidth="Infinity" styleClass="nav-btn" text="📋  Histórico" />-->
+<!--                <Button fx:id="btnCategorias" maxWidth="Infinity" styleClass="nav-btn" text="📁  Categorias" />-->
             </VBox>
 
             <!-- Rodapé da sidebar -->
