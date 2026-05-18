@@ -10,11 +10,11 @@ public abstract class Transacao {
     private Categoria categoria;
     private LocalDate data;
 
-    public Transacao(TipoTransacao tipo, double valor, String descricao, Categoria categoria) {
+    public Transacao(TipoTransacao tipo, double valor, String descricao, Categoria categoria, LocalDate data) {
         this.valor = valor;
         this.descricao = descricao;
         this.categoria = categoria;
-        this.setData(LocalDate.now());
+        this.setData(data);
         this.setTipo(tipo);
     }
 
@@ -41,8 +41,6 @@ public abstract class Transacao {
     public void setCategoria(Categoria categoria) {
         this.categoria = categoria;
     }
-
-    public abstract String tipoTransacao();
 
 	public LocalDate getData() {
 		return data;

@@ -7,11 +7,11 @@ import model.TipoTransacao;
 import model.Transacao;
 
 public class TransacaoFactory {
-    public static Transacao criar(TipoTransacao tipo, double valor, String descricao, Categoria categoria) {
+    public static Transacao criar(TipoTransacao tipo, double valor, String descricao, Categoria categoria, LocalDate data) {
         if (tipo == TipoTransacao.RECEITA) {
-            return new Receita(valor, descricao, categoria);
+            return new Receita(valor, descricao, categoria, data);
         } else if (tipo == TipoTransacao.DESPESA) {
-            return new Despesa(valor, descricao, categoria);
+            return new Despesa(valor, descricao, categoria, data);
         } else {
             throw new IllegalArgumentException("Tipo inválido: " + tipo);
         }

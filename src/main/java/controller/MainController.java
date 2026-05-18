@@ -27,6 +27,7 @@ public class MainController {
     @FXML private TextField txtValor; // campo para o valor 
     @FXML private ComboBox<TipoTransacao> cbTipo; //seletor de tipo de transação
     @FXML private ComboBox<Categoria> cbCategoria; //seletor de categoria
+    @FXML private DatePicker dpData;
     
     @FXML private Label lblSaldoTotal; //label para exibir saldo total
 
@@ -67,6 +68,7 @@ public class MainController {
             
             TipoTransacao tipo = cbTipo.getValue();
             Categoria categoria = cbCategoria.getValue();
+            LocalDate data = dpData.getValue();
 
             if (descricao.trim().isEmpty() || tipo == null || categoria == null) {
                 mostrarAlerta("Campos Inválidos", "Por favor, preencha todos os campos corretamente.");
@@ -74,7 +76,7 @@ public class MainController {
             }
 
             // A TransacaoFactory recebe os dados da interface e decide a criação
-            Transacao novaTransacao = TransacaoFactory.criar(tipo, valor, descricao, categoria);
+            Transacao novaTransacao = TransacaoFactory.criar(tipo, valor, descricao, categoria, data);
 
             //O arquivo JSON é atualizado ao adicionar 
             gerenciador.adicionarTransacao(novaTransacao);
@@ -107,7 +109,7 @@ public class MainController {
 
     @FXML
     public void handleAddTransacao() {
-    	
+    	//A FAZER
     }
     @FXML
     public void handleLimpar() {
@@ -120,12 +122,12 @@ public class MainController {
 //    
     @FXML
     public void handleBusca() {
-    	
+    	//A FAZER
     }
     
     @FXML
     public void handleFiltro() {
-    	
+    	//A FAZER
     }
     
     @FXML
@@ -146,8 +148,9 @@ public class MainController {
     private void limparCampos() {
         txtDescricao.clear();
         txtValor.clear();
-        cbTipo.getSelectionModel().clearSelection();
-        cbCategoria.getSelectionModel().clearSelection();
+        cbTipo.getSelectionModel().select(0);
+        cbCategoria.getSelectionModel().select(0);
+        dpData.setValue(null);
     }
 
     private void mostrarAlerta(String titulo, String mensagem) {

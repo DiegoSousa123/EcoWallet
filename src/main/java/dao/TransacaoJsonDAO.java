@@ -36,7 +36,6 @@ public class TransacaoJsonDAO implements TransacaoDAO {
             obj.put("valor", t.getValor());
             obj.put("data", t.getData().toString());
             obj.put("categoria", t.getCategoria().name());
-
             jsonArray.add(obj);
         }
 
@@ -71,7 +70,7 @@ public class TransacaoJsonDAO implements TransacaoDAO {
                 Categoria categoria = Categoria.valueOf((String) jsonObj.get("categoria"));
 
                 // DELEGAÇÃO: O DAO aciona a Factory para criar o objeto correto
-                Transacao transacao = TransacaoFactory.criar(tipo, valor, descricao, categoria);
+                Transacao transacao = TransacaoFactory.criar(tipo, valor, descricao, categoria, data);
 
                 if (transacao != null) {
                     transacoes.add(transacao);

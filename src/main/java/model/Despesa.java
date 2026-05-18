@@ -1,13 +1,10 @@
 package model;
 
+import java.time.LocalDate;
+
 public class Despesa extends Transacao {
 
-    public Despesa(double valor, String descricao, Categoria categoria) {
-        super(TipoTransacao.DESPESA, valor, descricao, categoria);
-    }
-
-    @Override
-    public String tipoTransacao() {
-        return "Despesa";
+    public Despesa(double valor, String descricao, Categoria categoria, LocalDate data) {
+        super(TipoTransacao.DESPESA, valor, descricao, categoria, data);
     }
 }
