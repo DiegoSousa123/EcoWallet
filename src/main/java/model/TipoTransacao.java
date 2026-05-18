@@ -1,5 +1,6 @@
 package model;
 
-public class TipoTransacao {
-
+public enum TipoTransacao {
+	RECEITA,
+	DESPESA
 }

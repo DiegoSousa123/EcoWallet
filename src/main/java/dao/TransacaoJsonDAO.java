@@ -1,7 +1,10 @@
 package dao;
+import java.io.File;
 import java.io.FileReader;
+import model.TipoTransacao;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.FileAlreadyExistsException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,13 +24,14 @@ public class TransacaoJsonDAO implements TransacaoDAO {
     @Override
     @SuppressWarnings("unchecked")
     public void salvar(List<Transacao> transacoes) {
+    	System.out.println("Enter salvar to file: checked");
         JSONArray jsonArray = new JSONArray();
 
         for (Transacao t : transacoes) {
             JSONObject obj = new JSONObject();
 
             // O tipo da classe é armazenado para permitir a recriação correta via Factory
-            obj.put("tipo", t.getClass().getSimpleName());
+            obj.put("tipo", String.valueOf(t.getTipo()));
             obj.put("descricao", t.getDescricao());
             obj.put("valor", t.getValor());
             obj.put("data", t.getData().toString());
@@ -36,9 +40,13 @@ public class TransacaoJsonDAO implements TransacaoDAO {
             jsonArray.add(obj);
         }
 
-        try (FileWriter file = new FileWriter(FILE_PATH)) {
+        try{
+        	File newFile = new File(FILE_PATH);
+        	System.out.println("O arquivo foi salvo em: " + newFile.getAbsolutePath());
+        	FileWriter file = new FileWriter(newFile);
             file.write(jsonArray.toJSONString());
             file.flush();
+            file.close();
         } catch (IOException e) {
             System.err.println("Erro ao salvar o arquivo JSON: " + e.getMessage());
         }
@@ -56,14 +64,14 @@ public class TransacaoJsonDAO implements TransacaoDAO {
             for (Object item : jsonArray) {
                 JSONObject jsonObj = (JSONObject) item;
 
-                String tipo = (String) jsonObj.get("tipo");
+                TipoTransacao tipo = TipoTransacao.valueOf((String)jsonObj.get("tipo"));
                 String descricao = (String) jsonObj.get("descricao");
                 double valor = ((Number) jsonObj.get("valor")).doubleValue();
                 LocalDate data = LocalDate.parse((String) jsonObj.get("data"));
                 Categoria categoria = Categoria.valueOf((String) jsonObj.get("categoria"));
 
                 // DELEGAÇÃO: O DAO aciona a Factory para criar o objeto correto
-                Transacao transacao = TransacaoFactory.criarTransacao(tipo, descricao, valor, data, categoria);
+                Transacao transacao = TransacaoFactory.criar(tipo, valor, descricao, categoria);
 
                 if (transacao != null) {
                     transacoes.add(transacao);

@@ -1,5 +1,6 @@
 package service;
 
+import dao.TransacaoJsonDAO;
 import model.Transacao;
 import java.util.ArrayList;
 import java.util.List;
@@ -7,7 +8,7 @@ import java.util.List;
 public class GerenciadorFinancas {
 
     private List<Transacao> transacoes = new ArrayList<>();
-
+    private TransacaoJsonDAO listaTransacao = new TransacaoJsonDAO();
     public void adicionarTransacao(Transacao t) {
         transacoes.add(t);
     }
@@ -17,9 +18,12 @@ public class GerenciadorFinancas {
     }
 
     public List<Transacao> getTransacoes() {
-        return transacoes;
+        this.transacoes = listaTransacao.carregar();
+        return this.transacoes;
     }
-
+    public void salvarNoArquivo(){
+        listaTransacao.salvar(transacoes);
+    }
     public double calcularSaldo() {
         double saldo = 0;
         for (Transacao t : transacoes) {
