@@ -1,22 +1,29 @@
 package dao;
-import java.io.File;
-import java.io.FileReader;
-import model.TipoTransacao;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.nio.file.FileAlreadyExistsException;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 import factory.TransacaoFactory;
 import model.Categoria;
+import model.TipoTransacao;
 import model.Transacao;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Implementação do DAO de transações usando JSON (json-simple).
+ *
+ * Correções aplicadas no merge:
+ * - Escrita agora usa OutputStreamWriter com UTF-8 explícito.
+ * - Import desnecessário de FileAlreadyExistsException removido.
+ * - Logs de System.out removidos da produção (apenas erros via System.err).
+ * - try-with-resources adicionado no método salvar().
+ */
 public class TransacaoJsonDAO implements TransacaoDAO {
 
     private static final String FILE_PATH = "transacoes.json";
@@ -24,28 +31,22 @@ public class TransacaoJsonDAO implements TransacaoDAO {
     @Override
     @SuppressWarnings("unchecked")
     public void salvar(List<Transacao> transacoes) {
-    	System.out.println("Enter salvar to file: checked");
         JSONArray jsonArray = new JSONArray();
 
         for (Transacao t : transacoes) {
             JSONObject obj = new JSONObject();
-
-            // O tipo da classe é armazenado para permitir a recriação correta via Factory
-            obj.put("tipo", String.valueOf(t.getTipo()));
+            obj.put("tipo",      t.getTipo().name());      // persiste o name() do enum, não o toString()
             obj.put("descricao", t.getDescricao());
-            obj.put("valor", t.getValor());
-            obj.put("data", t.getData().toString());
-            obj.put("categoria", t.getCategoria().name());
+            obj.put("valor",     t.getValor());
+            obj.put("data",      t.getData().toString());  // ISO-8601: yyyy-MM-dd
+            obj.put("categoria", t.getCategoria().name()); // persiste o name() do enum
             jsonArray.add(obj);
         }
 
-        try{
-        	File newFile = new File(FILE_PATH);
-        	System.out.println("O arquivo foi salvo em: " + newFile.getAbsolutePath());
-        	FileWriter file = new FileWriter(newFile);
-            file.write(jsonArray.toJSONString());
-            file.flush();
-            file.close();
+        File arquivo = new File(FILE_PATH);
+        try (Writer writer = new OutputStreamWriter(
+                new FileOutputStream(arquivo), StandardCharsets.UTF_8)) {
+            writer.write(jsonArray.toJSONString());
         } catch (IOException e) {
             System.err.println("Erro ao salvar o arquivo JSON: " + e.getMessage());
         }
@@ -54,32 +55,37 @@ public class TransacaoJsonDAO implements TransacaoDAO {
     @Override
     public List<Transacao> carregar() {
         List<Transacao> transacoes = new ArrayList<>();
-        JSONParser parser = new JSONParser();
+        File arquivo = new File(FILE_PATH);
 
-        try (FileReader reader = new FileReader(FILE_PATH)) {
-            Object obj = parser.parse(reader);
-            JSONArray jsonArray = (JSONArray) obj;
+        if (!arquivo.exists()) {
+            // Primeira execução — arquivo ainda não existe, retorna lista vazia
+            return transacoes;
+        }
+
+        JSONParser parser = new JSONParser();
+        try (Reader reader = new InputStreamReader(
+                new FileInputStream(arquivo), StandardCharsets.UTF_8)) {
+
+            Object parsed = parser.parse(reader);
+            JSONArray jsonArray = (JSONArray) parsed;
 
             for (Object item : jsonArray) {
                 JSONObject jsonObj = (JSONObject) item;
 
-                TipoTransacao tipo = TipoTransacao.valueOf((String)jsonObj.get("tipo"));
-                String descricao = (String) jsonObj.get("descricao");
-                double valor = ((Number) jsonObj.get("valor")).doubleValue();
-                LocalDate data = LocalDate.parse((String) jsonObj.get("data"));
-                Categoria categoria = Categoria.valueOf((String) jsonObj.get("categoria"));
+                TipoTransacao tipo      = TipoTransacao.valueOf((String) jsonObj.get("tipo"));
+                String        descricao = (String) jsonObj.get("descricao");
+                double        valor     = ((Number) jsonObj.get("valor")).doubleValue();
+                LocalDate     data      = LocalDate.parse((String) jsonObj.get("data"));
+                Categoria     categoria = Categoria.valueOf((String) jsonObj.get("categoria"));
 
-                // DELEGAÇÃO: O DAO aciona a Factory para criar o objeto correto
-                Transacao transacao = TransacaoFactory.criar(tipo, valor, descricao, categoria, data);
-
-                if (transacao != null) {
-                    transacoes.add(transacao);
-                }
+                Transacao t = TransacaoFactory.criar(tipo, valor, descricao, categoria, data);
+                if (t != null) transacoes.add(t);
             }
+
         } catch (IOException e) {
-            System.out.println("Arquivo transacoes.json não encontrado. Uma nova base será criada no primeiro salvamento.");
+            System.err.println("Erro de leitura em " + FILE_PATH + ": " + e.getMessage());
         } catch (ParseException e) {
-            System.err.println("Erro ao realizar o parse do JSON: " + e.getMessage());
+            System.err.println("Erro de parse JSON em " + FILE_PATH + ": " + e.getMessage());
         } catch (Exception e) {
             System.err.println("Erro inesperado ao carregar transações: " + e.getMessage());
         }
