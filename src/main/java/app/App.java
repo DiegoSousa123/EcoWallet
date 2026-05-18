@@ -10,17 +10,14 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-
         Parent root = FXMLLoader.load(
                 getClass().getResource("/view/MainView.fxml")
         );
-
         Scene scene = new Scene(root);
-
-        stage.setTitle("EcoWallet");
-
+        stage.setTitle("EcoWallet — Controle Financeiro");
+        stage.setMinWidth(900);
+        stage.setMinHeight(600);
         stage.setScene(scene);
-
         stage.show();
     }
 
