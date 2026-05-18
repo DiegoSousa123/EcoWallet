@@ -1,6 +1,7 @@
 package service;
 
 import dao.TransacaoJsonDAO;
+import model.TipoTransacao;
 import model.Transacao;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +28,7 @@ public class GerenciadorFinancas {
     public double calcularSaldo() {
         double saldo = 0;
         for (Transacao t : transacoes) {
-            if (t.tipoTransacao().equals("Receita")) {
+            if (t.getTipo().equals(TipoTransacao.RECEITA)) {
                 saldo += t.getValor();
             } else {
                 saldo -= t.getValor();

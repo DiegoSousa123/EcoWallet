@@ -15,48 +15,43 @@ import java.time.LocalDate;
 
 public class MainController {
 
-    // Componentes da Interface (TableView para listar transações em tempo real) [cite: 13]
-    @FXML private TableView<Transacao> tableTransacoes;
-    @FXML private TableColumn<Transacao, String> colDescricao;
-    @FXML private TableColumn<Transacao, String> colTipo; // Opcional, dependendo da sua Transacao
-    @FXML private TableColumn<Transacao, Categoria> colCategoria;
-    @FXML private TableColumn<Transacao, Double> colValor;
-    @FXML private TableColumn<Transacao, LocalDate> colData;
+    //Componentes da Interface (IMPORTANTE)
+    @FXML private TableView<Transacao> tabelaTransacoes; //tabela de transacoes
+    @FXML private TableColumn<Transacao, String> colDescricao; // coluna descrição
+    @FXML private TableColumn<Transacao, String> colTipo; // coluna tipo
+    @FXML private TableColumn<Transacao, Categoria> colCategoria; // coluna categoria
+    @FXML private TableColumn<Transacao, Double> colValor; // coluna valor
+    @FXML private TableColumn<Transacao, LocalDate> colData; // coluna data
 
-    @FXML private TextField txtDescricao;
-    @FXML private TextField txtValor; // TextField com validação 
-    @FXML private ComboBox<TipoTransacao> cbTipo;
-    @FXML private ComboBox<Categoria> cbCategoria;
+    @FXML private TextField txtDescricao; //campo para descrição
+    @FXML private TextField txtValor; // campo para o valor 
+    @FXML private ComboBox<TipoTransacao> cbTipo; //seletor de tipo de transação
+    @FXML private ComboBox<Categoria> cbCategoria; //seletor de categoria
     
-    // Label de "Saldo Total" vinculado à lógica do Model [cite: 15]
-    @FXML private Label lblSaldoTotal;
+    @FXML private Label lblSaldoTotal; //label para exibir saldo total
 
-    // Gerenciador responsável por somar saldos e manter a lista [cite: 9]
+
     private GerenciadorFinancas gerenciador;
     private ObservableList<Transacao> transacoesObservable;
 
-    /**
-     * Ao iniciar o Controller, o sistema carrega os dados 
-     */
     @FXML
     public void initialize() {
-        // Inicializa o gerenciador (que já carrega do arquivo .json na sua instância)
         gerenciador = new GerenciadorFinancas();
 
-        // Configuração das colunas da TableView
+        //Configuração das colunas da TableView
         colDescricao.setCellValueFactory(new PropertyValueFactory<>("descricao"));
         colCategoria.setCellValueFactory(new PropertyValueFactory<>("categoria"));
         colValor.setCellValueFactory(new PropertyValueFactory<>("valor"));
         colData.setCellValueFactory(new PropertyValueFactory<>("data"));
         colTipo.setCellValueFactory(new PropertyValueFactory<>("tipo"));
         
-        // Configuração dos ComboBoxes baseados nos Enums definidos no pacote model
+        //Configuração dos ComboBoxes baseados nos Enums definidos no pacote model
         cbTipo.setItems(FXCollections.observableArrayList(TipoTransacao.values()));
         cbCategoria.setItems(FXCollections.observableArrayList(Categoria.values()));
 
-        // Carrega a lista do gerenciador na interface
+        //Carrega a lista do gerenciador na interface
         transacoesObservable = FXCollections.observableArrayList(gerenciador.getTransacoes());
-        tableTransacoes.setItems(transacoesObservable);
+        tabelaTransacoes.setItems(transacoesObservable);
 
         atualizarSaldo();
     }
@@ -67,7 +62,7 @@ public class MainController {
             String descricao = txtDescricao.getText();
             String valorTexto = txtValor.getText().replace(",", "."); // Prevenção de erro de locale
             
-            // Tratamento de exceções NumberFormatException para garantir que não digitem letras 
+            //Tratamento de exceções NumberFormatException para garantir que não digitem letras 
             double valor = Double.parseDouble(valorTexto); 
             
             TipoTransacao tipo = cbTipo.getValue();
@@ -78,14 +73,14 @@ public class MainController {
                 return;
             }
 
-            // A TransacaoFactory recebe os dados da interface e decide a criação [cite: 8]
+            // A TransacaoFactory recebe os dados da interface e decide a criação
             Transacao novaTransacao = TransacaoFactory.criar(tipo, valor, descricao, categoria);
 
-            // O arquivo JSON é atualizado ao adicionar 
+            //O arquivo JSON é atualizado ao adicionar 
             gerenciador.adicionarTransacao(novaTransacao);
             gerenciador.salvarNoArquivo();
 
-            // Atualiza a View e o Saldo
+            //Atualiza a View e o Saldo
             transacoesObservable.add(novaTransacao);
             atualizarSaldo();
             limparCampos();
@@ -96,22 +91,51 @@ public class MainController {
         }
     }
 
-    @FXML
     public void removerTransacao() {
-        Transacao selecionada = tableTransacoes.getSelectionModel().getSelectedItem();
+        Transacao selecionada = tabelaTransacoes.getSelectionModel().getSelectedItem();
         
         if (selecionada != null) {
             // O arquivo JSON é atualizado ao remover 
             gerenciador.removerTransacao(selecionada);
             transacoesObservable.remove(selecionada);
+            gerenciador.salvarNoArquivo();
             atualizarSaldo();
         } else {
             mostrarAlerta("Seleção Inválida", "Selecione uma transação na tabela para remover.");
         }
     }
 
+    @FXML
+    public void handleAddTransacao() {
+    	
+    }
+    @FXML
+    public void handleLimpar() {
+    	limparCampos();
+    }
+//    @FXML
+//    public void handleSalvar() {
+//    	
+//    }
+//    
+    @FXML
+    public void handleBusca() {
+    	
+    }
+    
+    @FXML
+    public void handleFiltro() {
+    	
+    }
+    
+    @FXML
+    public void handleRemover() {
+    	removerTransacao();
+    }
+    
+    
     /**
-     * Vincula a propriedade de texto do Label à lógica do Model [cite: 15]
+     * Vincula a propriedade de texto do Label à lógica do Model
      */
     private void atualizarSaldo() {
         // Supõe-se que GerenciadorFinancas possua um método para retornar o saldo já calculado
