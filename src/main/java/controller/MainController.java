@@ -333,11 +333,15 @@ public class MainController {
 
     @FXML
     public void aoPressionarMouse(MouseEvent mouseEvent){
-        if(mouseEvent.getClickCount() == 2){
-            maximizarJanela(null);
-        }
         xOffset = mouseEvent.getSceneX();
         yOffset = mouseEvent.getSceneY();
+    }
+
+    @FXML
+    public void aoClicarDuasVezes(MouseEvent event){
+        if(event.getClickCount() == 2){
+            maximizarJanela(null);
+        }
     }
 
     @FXML
@@ -350,10 +354,8 @@ public class MainController {
         Stage stage = getStage();
 
         if(stage.isMaximized()){
-            stage.setMaximized(false);
-            xOffset = stage.getWidth() / 2;
+            maximizarJanela(null);
         }
-
         stage.setX(mouseEvent.getScreenX() - xOffset);
         stage.setY(mouseEvent.getScreenY() - yOffset);
     }
