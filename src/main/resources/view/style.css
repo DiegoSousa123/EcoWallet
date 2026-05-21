@@ -36,7 +36,20 @@
     -fx-font-family:  'DM Sans';
     -fx-font-size:    14px;
 }
- 
+
+.btn-window{
+    -fx-background-color: -eco-surface;
+    -fx-text-fill: -eco-text;
+}
+
+.btn-window:hover{
+    -fx-background-color: -eco-surface-2;
+}
+
+.btn-window.close-window:hover{
+    -fx-background-color: -eco-despesa;
+    -fx-text-fill: ghostwhite;
+}
 
 .root-pane {
     -fx-background-color: -eco-bg;

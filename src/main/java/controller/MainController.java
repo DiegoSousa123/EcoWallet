@@ -4,12 +4,19 @@ import factory.TransacaoFactory;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
+import javafx.stage.Stage;
 import model.Categoria;
 import model.TipoTransacao;
 import model.Transacao;
+import org.kordamp.ikonli.javafx.FontIcon;
 import service.GerenciadorFinancas;
 
 import java.time.LocalDate;
@@ -24,6 +31,16 @@ import java.util.Locale;
  */
 public class MainController {
 
+    // calcula o arrasto da janela
+    private double xOffset = 0;
+    private double yOffset = 0;
+
+    @FXML private HBox barraJanela;
+    @FXML private Button btnMinimizarJanela;
+    @FXML private Button btnMaximizarJanela;
+    @FXML private Button btnFecharJanela;
+    @FXML private FontIcon maximizeIcon;
+
     // ── Tabela ──────────────────────────────────────────────────────────────
     @FXML private TableView<Transacao>              tabelaTransacoes;
     @FXML private TableColumn<Transacao, String>         colDescricao;
@@ -31,7 +48,7 @@ public class MainController {
     @FXML private TableColumn<Transacao, Categoria>      colCategoria;
     @FXML private TableColumn<Transacao, Double>    colValor;
     @FXML private TableColumn<Transacao, LocalDate> colData;
-
+    @FXML private ImageView logo;
     // ── Formulário ───────────────────────────────────────────────────────────
     @FXML private TextField             txtDescricao;
     @FXML private TextField             txtValor;
@@ -81,6 +98,9 @@ public class MainController {
         // Oculta label de erro inicialmente
         lblErro.setVisible(false);
         lblErro.setManaged(false);
+
+        Image image = new Image(getClass().getResourceAsStream("/images/ecowallet_240.png"));
+        logo.setImage(image);
     }
 
     // ── Configuração das colunas ─────────────────────────────────────────────
@@ -289,6 +309,57 @@ public class MainController {
     public void handleLimpar() {
         limparCampos();
         ocultarErro();
+    }
+
+    @FXML
+    public void minimizarJanela(ActionEvent e){
+        getStage().setIconified(true);
+    }
+    @FXML
+    public void maximizarJanela(ActionEvent e){
+        Stage stage = getStage();
+        if(stage.isMaximized()){
+            stage.setMaximized(false);
+            maximizeIcon.setIconLiteral("remixal-checkbox-blank-line");
+        }else{
+            stage.setMaximized(true);
+            maximizeIcon.setIconLiteral("remixal-checkbox-multiple-blank-line");
+        }
+    }
+    @FXML
+    public void fecharJanela(ActionEvent e){
+        getStage().close();
+    }
+
+    @FXML
+    public void aoPressionarMouse(MouseEvent mouseEvent){
+        if(mouseEvent.getClickCount() == 2){
+            maximizarJanela(null);
+        }
+        xOffset = mouseEvent.getSceneX();
+        yOffset = mouseEvent.getSceneY();
+    }
+
+    @FXML
+    public void aoArrastarMouse(MouseEvent mouseEvent){
+
+        if (!mouseEvent.isPrimaryButtonDown()) {
+            return;
+        }
+
+        Stage stage = getStage();
+
+        if(stage.isMaximized()){
+            stage.setMaximized(false);
+            xOffset = stage.getWidth() / 2;
+        }
+
+        stage.setX(mouseEvent.getScreenX() - xOffset);
+        stage.setY(mouseEvent.getScreenY() - yOffset);
+    }
+
+    private Stage getStage(){
+        return (Stage) barraJanela.getScene().getWindow();
     }
 
     // ════════════════════════════════════════════════════════════════════════
