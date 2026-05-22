@@ -315,9 +315,9 @@ public class MainController {
     public void minimizarJanela(ActionEvent e){
         getStage().setIconified(true);
     }
-    @FXML
-    public void maximizarJanela(ActionEvent e){
-        Stage stage = getStage();
+    
+    private void maximizar() {
+    	Stage stage = getStage();
         if(stage.isMaximized()){
             stage.setMaximized(false);
             maximizeIcon.setIconLiteral("remixal-checkbox-blank-line");
@@ -325,6 +325,11 @@ public class MainController {
             stage.setMaximized(true);
             maximizeIcon.setIconLiteral("remixal-checkbox-multiple-blank-line");
         }
+    }
+    
+    @FXML
+    public void maximizarJanela(ActionEvent e){
+        maximizar();
     }
     @FXML
     public void fecharJanela(ActionEvent e){
@@ -340,7 +345,7 @@ public class MainController {
     @FXML
     public void aoClicarDuasVezes(MouseEvent event){
         if(event.getClickCount() == 2){
-            maximizarJanela(null);
+            maximizar();
         }
     }
 
@@ -354,7 +359,7 @@ public class MainController {
         Stage stage = getStage();
 
         if(stage.isMaximized()){
-            maximizarJanela(null);
+            maximizar();
         }
         stage.setX(mouseEvent.getScreenX() - xOffset);
         stage.setY(mouseEvent.getScreenY() - yOffset);

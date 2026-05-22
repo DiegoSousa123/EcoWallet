@@ -233,7 +233,7 @@
 
                         <Button fx:id="btnRemover" onAction="#handleRemover" styleClass="btn-danger" text="Remover">
                             <graphic>
-                                <FontIcon iconLiteral="remixal-delete-bin-fill" iconSize="12" iconColor="ff6b6b"/>
+                                <FontIcon iconLiteral="remixal-delete-bin-fill" iconSize="12" iconColor="#ff6b6b"/>
                             </graphic>
                         </Button>
                     </HBox>
