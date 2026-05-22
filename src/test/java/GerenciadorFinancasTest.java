@@ -1,9 +1,15 @@
-import dao.TransacaoJsonDAO;
-import factory.TransacaoFactory;
-import model.Categoria;
-import model.Despesa;
-import model.TipoTransacao;
-import model.Transacao;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -11,15 +17,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import dao.TransacaoJsonDAO;
+import factory.TransacaoFactory;
+import model.Categoria;
+import model.TipoTransacao;
+import model.Transacao;
 import service.GerenciadorFinancas;
-
-import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
-@SuppressWarnings("typo")
 @ExtendWith(MockitoExtension.class)
 class GerenciadorFinancasTest {
 

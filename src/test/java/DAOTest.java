@@ -1,19 +1,5 @@
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.junit.jupiter.api.*;
-
-import dao.TransacaoJsonDAO;
-import model.Transacao;
-import model.TipoTransacao;
-import model.Categoria;
-import service.GerenciadorFinancas;
-import factory.TransacaoFactory;
-
-
-import org.junit.jupiter.api.Test;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -21,7 +7,16 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+
+import dao.TransacaoJsonDAO;
+import factory.TransacaoFactory;
+import model.Categoria;
+import model.TipoTransacao;
+import model.Transacao;
 
 class DAOTest {
 
