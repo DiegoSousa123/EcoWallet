@@ -19,9 +19,13 @@
 <?import org.kordamp.ikonli.javafx.FontIcon?>
 <?import javafx.scene.text.Font?>
 <!---->
-<BorderPane prefHeight="720.0" prefWidth="1280.0" styleClass="root-pane" stylesheets="@style.css"
+<BorderPane fx:id="root" prefHeight="720.0" prefWidth="1280.0" styleClass="root-pane" stylesheets="@style.css"
             xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="controller.MainController">
+	<padding> <!-- espaçamento para a área de redimensionamento da janela, que é de 3 pixels -->
+      <Insets bottom="4" left="4" right="4" top="4" />
+   </padding>
+
     <top>
         <!-- barra de título customizada -->
         <HBox fx:id="barraJanela" alignment="CENTER_RIGHT" maxHeight="38.0" minHeight="-Infinity" minWidth="-Infinity"
