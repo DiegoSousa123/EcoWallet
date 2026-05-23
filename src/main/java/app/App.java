@@ -38,6 +38,8 @@ public class App extends Application {
 		
 		mainRoot.setOnMouseMoved(event -> {
 			if(stage.isMaximized()) {
+				currentEdge = ResizeEdge.NONE;
+				updateCursor();
 				return;
 			}
 			currentEdge = getResizeEdge(event.getSceneX(), event.getSceneY());
@@ -71,7 +73,7 @@ public class App extends Application {
 		});
 
 		scene.setOnMouseDragged(event -> {
-			if (currentEdge != ResizeEdge.NONE && !stage.isMaximized()) {
+			if (currentEdge != null && currentEdge != ResizeEdge.NONE && !stage.isMaximized()) {
 				resizeStage(event);
 				event.consume();
 			}
@@ -94,8 +96,8 @@ public class App extends Application {
 	    double deltaY = event.getScreenY() - initialY;
 	    
 	    // Altere o limite mínimo se sua interface precisar de mais espaço (ex: 400x300)
-	    double minWidth = 300; 
-	    double minHeight = 200;
+	    double minWidth = primaryStage.getMinWidth();
+	    double minHeight = primaryStage.getMinHeight();
 
 	    switch(currentEdge) {
 	        case RIGHT:

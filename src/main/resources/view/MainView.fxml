@@ -23,7 +23,7 @@
             xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="controller.MainController">
 	<padding> <!-- espaçamento para a área de redimensionamento da janela, que é de 3 pixels -->
-      <Insets bottom="4" left="4" right="4" top="4" />
+      <Insets bottom="3" left="3" right="3" top="3" />
    </padding>
 
     <top>
