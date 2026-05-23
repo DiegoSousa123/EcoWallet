@@ -90,16 +90,21 @@ public class App extends Application {
 		stage.show();
 	}
 
-	//método principal para o redimensionamento da janela
+	//metodo principal para o redimensionamento da janela
 	private void resizeStage(MouseEvent event) {
-	    double deltaX = event.getScreenX() - initialX;
+	    // deltaX é o resultado da subtração da posição no eixo x atual do mouse na tela
+		// com a posição inicial dele no momento do click
+		// O mesmo vale para deltaY
+		double deltaX = event.getScreenX() - initialX;
 	    double deltaY = event.getScreenY() - initialY;
-	    
-	    // Altere o limite mínimo se sua interface precisar de mais espaço (ex: 400x300)
+
+		// limite de tamanho mínimo baseado no definido pelo Stage
 	    double minWidth = primaryStage.getMinWidth();
 	    double minHeight = primaryStage.getMinHeight();
 
 	    switch(currentEdge) {
+			// realiza calculos e aplica os redimensionamentos com
+			// base em qual borda o mouse está atualmente e considerando o limite de tamanho mínimo
 	        case RIGHT:
 	            primaryStage.setWidth(Math.max(initialWidth + deltaX, minWidth));
 	            break;

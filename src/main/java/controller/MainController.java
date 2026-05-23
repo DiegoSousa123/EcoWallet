@@ -36,6 +36,7 @@ public class MainController {
     private double xOffset = 0;
     private double yOffset = 0;
 
+    // Elementos da barra de título
     @FXML private HBox barraJanela;
     @FXML private Button btnMinimizarJanela;
     @FXML private Button btnMaximizarJanela;
@@ -312,22 +313,13 @@ public class MainController {
         ocultarErro();
     }
 
+    //== sessão de métodos para o gerenciamento de minimização/maximização da tela ==
+
     @FXML
     public void minimizarJanela(ActionEvent e){
         getStage().setIconified(true);
     }
-    
-    private void maximizar() {
-    	Stage stage = getStage();
-        if(stage.isMaximized()){
-            stage.setMaximized(false);
-            maximizeIcon.setIconLiteral("remixal-checkbox-blank-line");
-        }else{
-            stage.setMaximized(true);
-            maximizeIcon.setIconLiteral("remixal-checkbox-multiple-blank-line");
-        }
-    }
-    
+
     @FXML
     public void maximizarJanela(ActionEvent e){
         maximizar();
@@ -339,12 +331,14 @@ public class MainController {
 
     @FXML
     public void aoPressionarMouse(MouseEvent mouseEvent){
+        //captura a posição atual do mouse ao pressionar o click sob a barra de título
         xOffset = mouseEvent.getSceneX();
         yOffset = mouseEvent.getSceneY();
     }
 
     @FXML
     public void aoClicarDuasVezes(MouseEvent event){
+        //maxima a tela ao clicar duas vezes na barra de título
         if(event.getClickCount() == 2){
             maximizar();
         }
@@ -362,12 +356,25 @@ public class MainController {
         if(stage.isMaximized()){
             maximizar();
         }
+        //atualiza a posição da janela (move a janela) ao arrastar o
+        // mouse enquanto mantem pressionado sob a barra de título
         stage.setX(mouseEvent.getScreenX() - xOffset);
         stage.setY(mouseEvent.getScreenY() - yOffset);
     }
 
     private Stage getStage(){
         return (Stage) barraJanela.getScene().getWindow();
+    }
+    // metodo utilitário para gerenciar a maximização e mudança do ícone do botão
+    private void maximizar() {
+    	Stage stage = getStage();
+        if(stage.isMaximized()){
+            stage.setMaximized(false);
+            maximizeIcon.setIconLiteral("remixal-checkbox-blank-line");
+        }else{
+            stage.setMaximized(true);
+            maximizeIcon.setIconLiteral("remixal-checkbox-multiple-blank-line");
+        }
     }
 
     // ════════════════════════════════════════════════════════════════════════
