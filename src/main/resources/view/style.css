@@ -134,7 +134,14 @@
     -fx-border-width: 0 0 0 2;
     -fx-background-radius: 0 8 8 0;
 }
- 
+.nav-btn-active > .dash-btn-icon{
+    -fx-icon-color: -eco-green;
+}
+
+.nav-btn:hover > .dash-btn-icon{
+    -fx-icon-color: -eco-text;
+}
+
 /* Rodapé sidebar */
 .sidebar-footer {
     -fx-padding: 0 0 16 0;

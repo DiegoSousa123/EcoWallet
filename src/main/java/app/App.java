@@ -1,7 +1,6 @@
 package app;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Insets;
 import javafx.scene.Cursor;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -165,7 +164,6 @@ public class App extends Application {
 	}
 
 	private void updateCursor() { // atualiza o visual do cursor de acordo com a direção
-		// TODO Auto-generated method stub
 		switch(currentEdge) {
 		case LEFT, RIGHT:
 			mainRoot.setCursor(Cursor.H_RESIZE); //cursor resize horizontal
@@ -186,7 +184,6 @@ public class App extends Application {
 
 	//método para determinar onde o cursor está atualmente
 	private ResizeEdge getResizeEdge(double mouseX, double mouseY) {
-		// TODO Auto-generated method stub
 		double stageWidth = primaryStage.getWidth();
 		double stageHeight = primaryStage.getHeight();
 		

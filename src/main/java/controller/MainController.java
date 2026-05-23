@@ -22,6 +22,7 @@ import service.GerenciadorFinancas;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
+import java.util.Objects;
 
 /**
  * Controller principal do EcoWallet.
@@ -99,7 +100,7 @@ public class MainController {
         lblErro.setVisible(false);
         lblErro.setManaged(false);
 
-        Image image = new Image(getClass().getResourceAsStream("/images/ecowallet_240.png"));
+        Image image = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/ecowallet_240.png")));
         logo.setImage(image);
     }
 
@@ -123,7 +124,7 @@ public class MainController {
                 } else {
                     Transacao t = getTableView().getItems().get(getIndex());
                     boolean receita = t.getTipo() == TipoTransacao.RECEITA;
-                    setText(String.format(new Locale("pt", "BR"), "R$ %.2f", valor));
+                    setText(String.format(new Locale.Builder().setLanguage("pt").setRegion("BR").build(), "R$ %.2f", valor));
                     getStyleClass().removeAll("cell-receita", "cell-despesa", "cell-mono");
                     getStyleClass().addAll("cell-mono", receita ? "cell-receita" : "cell-despesa");
                 }
@@ -385,7 +386,7 @@ public class MainController {
         long   qtdDesp   = gerenciador.contarPorTipo(TipoTransacao.DESPESA);
         int    total     = transacoesObservable.size();
 
-        Locale ptBR = new Locale("pt", "BR");
+        Locale ptBR = new Locale.Builder().setLanguage("pt").setRegion("BR").build();
         String fmt   = "R$ %.2f";
 
         lblSaldoTotal.setText(String.format(ptBR, fmt, saldo));

@@ -82,7 +82,7 @@
                 <Label styleClass="nav-section-label" text="NAVEGAÇÃO"/>
                 <Button fx:id="btnDashboard" maxWidth="Infinity" styleClass="nav-btn, nav-btn-active" text="Dashboard">
                     <graphic>
-                        <FontIcon iconLiteral="remixal-dashboard-fill" iconSize="24" iconColor="ghostwhite"/>
+                        <FontIcon styleClass="dash-btn-icon" iconLiteral="remixal-dashboard-fill" iconSize="24"/>
                     </graphic>
                 </Button>
                 <!--                <Button fx:id="btnNovaTransacao" maxWidth="Infinity" styleClass="nav-btn" text="➕  Nova Transação" />-->
