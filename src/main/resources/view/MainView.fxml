@@ -27,43 +27,7 @@
    </padding>
 
     <top>
-        <!-- barra de título customizada -->
-        <HBox fx:id="barraJanela" alignment="CENTER_RIGHT" maxHeight="38.0" minHeight="-Infinity" minWidth="-Infinity"
-              prefHeight="38.0" style="-fx-background-color: #181c27;" stylesheets="@style.css" onMouseClicked="#aoClicarDuasVezes" onMousePressed="#aoPressionarMouse" onMouseDragged="#aoArrastarMouse">
-            <children>
-                <HBox prefHeight="38.0" prefWidth="13.0"/>
-                <Label text="EcoWallet" textFill="WHITE">
-                    <font>
-                        <Font size="14.0"/>
-                    </font>
-                </Label>
-                <HBox prefHeight="100.0" prefWidth="200.0" HBox.hgrow="ALWAYS"/>
-                <HBox alignment="CENTER_RIGHT" spacing="5.0" HBox.hgrow="NEVER">
-                    <children>
-                        <Button onAction="#minimizarJanela" fx:id="btnMinimizarJanela" accessibleText="Minimizar" mnemonicParsing="false" styleClass="btn-window">
-                            <graphic>
-                                <FontIcon iconLiteral="remixmz-subtract-fill" iconSize="16" iconColor="ghostwhite"/>
-                            </graphic>
-                        </Button>
-                        <Button onAction="#maximizarJanela" fx:id="btnMaximizarJanela" accessibleText="Maximizar" mnemonicParsing="false" styleClass="btn-window">
-                            <graphic>
-                                <FontIcon fx:id="maximizeIcon" iconLiteral="remixal-checkbox-blank-line" iconSize="16"
-                                          iconColor="ghostwhite"/>
-                            </graphic>
-                        </Button>
-                        <Button onAction="#fecharJanela" fx:id="btnFecharJanela" accessibleText="Fechar" mnemonicParsing="false">
-                            <styleClass>
-                                <String fx:value="btn-window"/>
-                                <String fx:value="close-window"/>
-                            </styleClass>
-                            <graphic>
-                                <FontIcon iconLiteral="remixal-close-fill" iconSize="16" iconColor="ghostwhite"/>
-                            </graphic>
-                        </Button>
-                    </children>
-                </HBox>
-            </children>
-        </HBox>
+       <fx:include fx:id="titleBar" source="TitleBar.fxml"/>
     </top>
     <left>
         <VBox prefWidth="220" styleClass="sidebar">

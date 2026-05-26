@@ -1,22 +1,20 @@
 package controller;
 
+import app.WindowResizer;
 import factory.TransacaoFactory;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import model.Categoria;
 import model.TipoTransacao;
 import model.Transacao;
-import org.kordamp.ikonli.javafx.FontIcon;
 import service.GerenciadorFinancas;
 
 import java.time.LocalDate;
@@ -30,19 +28,12 @@ import java.util.Objects;
  *
  * Unificado em: 2026 — branch merge final.
  */
-public class MainController {
+public class MainController implements WindowMaximizationState {
 
-    // calcula o arrasto da janela
-    private double xOffset = 0;
-    private double yOffset = 0;
-
-    // Elementos da barra de título
-    @FXML private HBox barraJanela;
-    @FXML private Button btnMinimizarJanela;
-    @FXML private Button btnMaximizarJanela;
-    @FXML private Button btnFecharJanela;
-    @FXML private FontIcon maximizeIcon;
-
+    // variaveis de suporte a maximizacao
+    private boolean isMaximized = false;
+    @FXML private TitleBarController titleBarController;
+    @FXML BorderPane root;
     // ── Tabela ──────────────────────────────────────────────────────────────
     @FXML private TableView<Transacao>              tabelaTransacoes;
     @FXML private TableColumn<Transacao, String>         colDescricao;
@@ -80,6 +71,14 @@ public class MainController {
     private static final DateTimeFormatter FMT_BR =
             DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
+    public boolean isWindowMaximized() {
+        return this.isMaximized;
+    }
+
+    public void setWindowMaximized(boolean maximized) {
+        this.isMaximized = maximized;
+    }
+
     // ════════════════════════════════════════════════════════════════════════
     //  INICIALIZAÇÃO
     // ════════════════════════════════════════════════════════════════════════
@@ -103,6 +102,15 @@ public class MainController {
 
         Image image = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/ecowallet_240.png")));
         logo.setImage(image);
+
+        Objects.requireNonNull(titleBarController, "TitleBarController not injected");
+        titleBarController.setWindowState(this);
+
+        javafx.application.Platform.runLater(() -> {
+            //inicializar o redimensionador da janela
+           new WindowResizer((Stage)root.getScene().getWindow(), root, root.getScene(), this);
+        });
+
     }
 
     // ── Configuração das colunas ─────────────────────────────────────────────
@@ -311,70 +319,6 @@ public class MainController {
     public void handleLimpar() {
         limparCampos();
         ocultarErro();
-    }
-
-    //== sessão de métodos para o gerenciamento de minimização/maximização da tela ==
-
-    @FXML
-    public void minimizarJanela(ActionEvent e){
-        getStage().setIconified(true);
-    }
-
-    @FXML
-    public void maximizarJanela(ActionEvent e){
-        maximizar();
-    }
-    @FXML
-    public void fecharJanela(ActionEvent e){
-        getStage().close();
-    }
-
-    @FXML
-    public void aoPressionarMouse(MouseEvent mouseEvent){
-        //captura a posição atual do mouse ao pressionar o click sob a barra de título
-        xOffset = mouseEvent.getSceneX();
-        yOffset = mouseEvent.getSceneY();
-    }
-
-    @FXML
-    public void aoClicarDuasVezes(MouseEvent event){
-        //maxima a tela ao clicar duas vezes na barra de título
-        if(event.getClickCount() == 2){
-            maximizar();
-        }
-    }
-
-    @FXML
-    public void aoArrastarMouse(MouseEvent mouseEvent){
-
-        if (!mouseEvent.isPrimaryButtonDown()) {
-            return;
-        }
-
-        Stage stage = getStage();
-
-        if(stage.isMaximized()){
-            maximizar();
-        }
-        //atualiza a posição da janela (move a janela) ao arrastar o
-        // mouse enquanto mantem pressionado sob a barra de título
-        stage.setX(mouseEvent.getScreenX() - xOffset);
-        stage.setY(mouseEvent.getScreenY() - yOffset);
-    }
-
-    private Stage getStage(){
-        return (Stage) barraJanela.getScene().getWindow();
-    }
-    // metodo utilitário para gerenciar a maximização e mudança do ícone do botão
-    private void maximizar() {
-    	Stage stage = getStage();
-        if(stage.isMaximized()){
-            stage.setMaximized(false);
-            maximizeIcon.setIconLiteral("remixal-checkbox-blank-line");
-        }else{
-            stage.setMaximized(true);
-            maximizeIcon.setIconLiteral("remixal-checkbox-multiple-blank-line");
-        }
     }
 
     // ════════════════════════════════════════════════════════════════════════
