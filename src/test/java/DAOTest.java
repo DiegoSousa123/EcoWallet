@@ -1,22 +1,5 @@
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.junit.jupiter.api.Test;
-
-import dao.TransacaoJsonDAO;
-import model.Transacao;
-import model.TipoTransacao;
-import model.Categoria;
-import service.GerenciadorFinancas;
-import factory.TransacaoFactory;
-
-
-
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -24,7 +7,16 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+
+import dao.TransacaoJsonDAO;
+import factory.TransacaoFactory;
+import model.Categoria;
+import model.TipoTransacao;
+import model.Transacao;
 
 class DAOTest {
 
@@ -45,6 +37,7 @@ class DAOTest {
     }
 
     @Test
+    @DisplayName("Deve salvar a lista de transações no arquivo json com sucesso.")
     void deveSalvarTransacoesNoArquivoComSucesso() throws Exception {
         List<Transacao> transacoes = new ArrayList<>();
         Transacao t1 = TransacaoFactory.criar(TipoTransacao.DESPESA, 240, "Teste 1", Categoria.LAZER, LocalDate.now());

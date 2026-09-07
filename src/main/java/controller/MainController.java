@@ -1,5 +1,6 @@
 package controller;
 
+import app.WindowResizer;
 import factory.TransacaoFactory;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -7,6 +8,10 @@ import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.BorderPane;
+import javafx.stage.Stage;
 import model.Categoria;
 import model.TipoTransacao;
 import model.Transacao;
@@ -15,6 +20,7 @@ import service.GerenciadorFinancas;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
+import java.util.Objects;
 
 /**
  * Controller principal do EcoWallet.
@@ -22,8 +28,12 @@ import java.util.Locale;
  *
  * Unificado em: 2026 — branch merge final.
  */
-public class MainController {
+public class MainController implements WindowMaximizationState {
 
+    // variaveis de suporte a maximizacao
+    private boolean isMaximized = false;
+    @FXML private TitleBarController titleBarController;
+    @FXML BorderPane root;
     // ── Tabela ──────────────────────────────────────────────────────────────
     @FXML private TableView<Transacao>              tabelaTransacoes;
     @FXML private TableColumn<Transacao, String>         colDescricao;
@@ -31,7 +41,7 @@ public class MainController {
     @FXML private TableColumn<Transacao, Categoria>      colCategoria;
     @FXML private TableColumn<Transacao, Double>    colValor;
     @FXML private TableColumn<Transacao, LocalDate> colData;
-
+    @FXML private ImageView logo;
     // ── Formulário ───────────────────────────────────────────────────────────
     @FXML private TextField             txtDescricao;
     @FXML private TextField             txtValor;
@@ -61,6 +71,14 @@ public class MainController {
     private static final DateTimeFormatter FMT_BR =
             DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
+    public boolean isWindowMaximized() {
+        return this.isMaximized;
+    }
+
+    public void setWindowMaximized(boolean maximized) {
+        this.isMaximized = maximized;
+    }
+
     // ════════════════════════════════════════════════════════════════════════
     //  INICIALIZAÇÃO
     // ════════════════════════════════════════════════════════════════════════
@@ -81,6 +99,18 @@ public class MainController {
         // Oculta label de erro inicialmente
         lblErro.setVisible(false);
         lblErro.setManaged(false);
+
+        Image image = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/ecowallet_240.png")));
+        logo.setImage(image);
+
+        Objects.requireNonNull(titleBarController, "TitleBarController not injected");
+        titleBarController.setWindowState(this);
+
+        javafx.application.Platform.runLater(() -> {
+            //inicializar o redimensionador da janela
+           new WindowResizer((Stage)root.getScene().getWindow(), root, root.getScene(), this);
+        });
+
     }
 
     // ── Configuração das colunas ─────────────────────────────────────────────
@@ -103,7 +133,7 @@ public class MainController {
                 } else {
                     Transacao t = getTableView().getItems().get(getIndex());
                     boolean receita = t.getTipo() == TipoTransacao.RECEITA;
-                    setText(String.format(new Locale("pt", "BR"), "R$ %.2f", valor));
+                    setText(String.format(new Locale.Builder().setLanguage("pt").setRegion("BR").build(), "R$ %.2f", valor));
                     getStyleClass().removeAll("cell-receita", "cell-despesa", "cell-mono");
                     getStyleClass().addAll("cell-mono", receita ? "cell-receita" : "cell-despesa");
                 }
@@ -307,7 +337,7 @@ public class MainController {
         long   qtdDesp   = gerenciador.contarPorTipo(TipoTransacao.DESPESA);
         int    total     = transacoesObservable.size();
 
-        Locale ptBR = new Locale("pt", "BR");
+        Locale ptBR = new Locale.Builder().setLanguage("pt").setRegion("BR").build();
         String fmt   = "R$ %.2f";
 
         lblSaldoTotal.setText(String.format(ptBR, fmt, saldo));
